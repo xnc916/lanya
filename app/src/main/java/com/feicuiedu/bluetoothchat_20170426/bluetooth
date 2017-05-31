@@ -1,0 +1,41 @@
+基础知识：
+介绍
+BlueToothAdaper
+BlueToothDevice
+BlueToothSocket
+BlueToothServerSocket
+
+准备：
+添加权限
+<uses-permission android:name="android.permission.BLUETOOTH"/>
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+
+1. 获取蓝牙适配器：判空的操作，看是否支持蓝牙
+2. 启动蓝牙：isEnable()判断是不是启动了
+3. 发现设备：搜索，查询周围已开启的蓝牙设备(可被检测到)
+    1. 用广播，实时拿到扫描结果
+    2. 开启可检测性
+4. 检测到设备之后建立连接
+    服务端：mBluetoothAdapter.listenUsingRfcommWithServiceRecord(SOCKET_NAME, MY_UUID);创建
+           ServerSocket.accept();阻塞调用线程，等待连接
+    客户端：device.createRfcommSocketToServiceRecord(MY_UUID);创建
+           mmSocket.connect();
+    管理连接：连接之后，通讯的过程
+           方式：IO流：分别是Socket的getInputStream和getOutputStream。
+    处理一些细节
+
+总结：
+1. 查看蓝牙适配器(蓝牙无线装置BlueToothAdapter)：看一下支不支持蓝牙
+2. 支持蓝牙，打开蓝牙，mBluetoothAdapter.isEnabled()判断有没有开启
+3. 搜索周边的设备，为了保障自己可以被其他搜索到，所以打开可检测性
+4. 搜索之后，点击某一设备建立连接(主动去连接,当做客户端，如果失败，就当做服务端等待连接)
+    分别开线程处理：
+    服务端：mBluetoothAdapter.listenUsingRfcommWithServiceRecord(SOCKET_NAME, MY_UUID);创建
+               ServerSocket.accept();阻塞调用线程，等待连接
+    客户端：device.createRfcommSocketToServiceRecord(MY_UUID);创建
+               mmSocket.connect();
+5. 建立连接之后，通讯(通过IO流的读写操作，放到单独的线程去处理)
+    通讯：read和write的方法的调用处理通讯过程
+
+
+
